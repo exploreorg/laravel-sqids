@@ -75,7 +75,7 @@ return [
     |
     | This option controls the class that should be used for generating the
     | Sqid prefix. You can use any class that implements the following
-    | contract: \RedExplosion\Sqids\Contracts\Prefix.
+    | contract: \ExploreOrg\Sqids\Contracts\Prefix.
     |
     */
 

@@ -1,6 +1,6 @@
 {
     "name": "exploreorg/laravel-sqids",
-    "description": "This is my package laravel-sqids",
+    "description": "Easily generate Stripe/YouTube looking IDs for your Laravel models.",
     "keywords": [
         "exploreorg",
         "laravel",

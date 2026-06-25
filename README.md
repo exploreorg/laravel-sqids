@@ -1,64 +1,211 @@
-# This is my package laravel-sqids
+# Laravel Sqids
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/exploreorg/laravel-sqids.svg?style=flat-square)](https://packagist.org/packages/exploreorg/laravel-sqids)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/exploreorg/laravel-sqids/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/exploreorg/laravel-sqids/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/exploreorg/laravel-sqids/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/exploreorg/laravel-sqids/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/exploreorg/laravel-sqids.svg?style=flat-square)](https://packagist.org/packages/exploreorg/laravel-sqids)
+** This is a temporary fork of the actual laravel-sqids project to add Laravel 9 support until we update**
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Laravel Sqids (pronounced "squids") allows you to easily generate Stripe/YouTube looking IDs for your Laravel models.
+These IDs are short and are guaranteed to be Collision free.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-sqids.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-sqids)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+For more information on Sqids, we recommend checking out the official Sqids (formerly Hashids) website:
+[https://sqids.org](https://sqids.org).
 
 ## Installation
 
 You can install the package via composer:
 
-```bash
+```shell
 composer require exploreorg/laravel-sqids
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-sqids-migrations"
-php artisan migrate
 ```
 
 You can publish the config file with:
 
-```bash
-php artisan vendor:publish --tag="laravel-sqids-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-sqids-views"
+```shell
+php artisan vendor:publish --tag="sqids-config"
 ```
 
 ## Usage
 
+### Using Sqids
+
+To use Laravel Sqids, simply add the `ExploreOrg\Sqids\Concerns\HasSqids` trait to your model:
+
 ```php
-$sqids = new ExploreOrg\Sqids();
-echo $sqids->echoPhrase('Hello, ExploreOrg!');
+use ExploreOrg\Sqids\Concerns\HasSqids;
+
+class User extends Authenticatable
+{
+    use HasSqids;
+}
 ```
+
+You will now be able to access the Sqid for the model, by calling the `sqid` attribute:
+
+```php
+$user = User::first();
+
+$sqid = $user->sqid; // usr_A3EyoEb2TO
+```
+
+The result of `$sqid` will be encoded value of the models primary key along with the model prefix.
+
+> [!Tip]
+> Only integers can be encoded, and therefore we recommend using this package in conjunction with auto
+incrementing IDs.
+
+If you would like to set a custom prefix for the model, you can override it by setting a `$sqidPrefix` property value
+on your model like so:
+
+```php
+use ExploreOrg\Sqids\Concerns\HasSqids;
+
+class User extends Authenticatable
+{
+    use HasSqids;
+    
+    protected string $sqidPrefix = 'user';
+}
+
+$user = User::first();
+$sqid = $user->sqid; // user_A3EyoEb2TO
+```
+
+### Builder Mixins
+
+Laravel Sqids provides a number of Eloquent builder mixins to make working with Sqids seamless.
+
+#### Find by Sqid
+
+To find a model by a given Sqid, you can use the `findBySqid` method:
+
+```php
+$user = User::findBySqid('usr_A3EyoEb2TO');
+```
+
+If the model doesn't exist, `null` will be returned. However, if you would like to throw an exception, you can use
+the `findBySqidOrFail` method instead which will throw a `ModelNotFoundException` when a model can't be found:
+
+```php
+$user = User::findBySqidOrFail('usr_invalid');
+```
+
+#### Where Sqid
+
+To add a where clause to your query, you can use the `whereSqid` method:
+
+```php
+$users = User::query()
+    ->whereSqid('usr_A3EyoEb2TO')
+    ->get();
+```
+
+This will retrieve all users where the Sqid/primary key matches the given value.
+
+#### Where Sqid in
+
+To get all models where the Sqid is in a given array, you can use the `whereSqidIn` method:
+
+```php
+$users = User::query()
+    ->whereSqidIn('id', ['usr_A3EyoEb2TO'])
+    ->get();
+```
+
+This will return all users where the `id` is in the array of decoded Sqids.
+
+#### Where Sqid not in
+
+To get all models where the Sqid is not in a given array, you can use the `whereSqidNotIn` method:
+
+```php
+$users = User::query()
+    ->whereSqidNotIn('id', ['usr_A3EyoEb2TO'])
+    ->get();
+```
+
+This will return all users where the `id` is not in the array of decoded Sqids.
+
+### Validation Rule
+
+There may be times where you need to validate a sqid in a form request. Laravel Sqids provides a `SqidsExists` rule to
+handle this automatically.
+
+```php
+use ExploreOrg\Sqids\Rules\SqidExists;
+
+$validated = validator(
+    ['customer_id' => 'cus_A3EyoEb2TO'],
+    ['customer_id' => [new SqidExists(Customer::class)]],
+)->validate();
+```
+
+The rule validates that the sqid can be decoded for the given model and that the model exists.
+
+You can also add query constraints similar to Laravel's `Rule::exists`:
+
+```php
+use ExploreOrg\Sqids\Rules\SqidExists;
+
+$rule = (new SqidExists(Post::class))
+    ->where('team_id', $team->id)
+    ->withoutTrashed();
+
+$validated = validator(
+    ['post' => 'pst_A3EyoEb2TO'],
+    ['post' => [$rule]],
+)->validate();
+```
+
+Available constraints:
+
+- `where($column, $value)`
+- `whereNot($column, $value)`
+- `whereNull($column)`
+- `whereNotNull($column)`
+- `whereIn($column, $values)`
+- `whereNotIn($column, $values)`
+- `withoutTrashed()`
+- `onlyTrashed()`
+
+### Route model binding
+
+Laravel Sqids supports route model binding out of the box. Simply create a route as you normally would and we'll take
+care of the rest:
+
+```php
+// GET /users/usr_A3EyoEb2TO
+Route::get('users/{user}', function (User $user) {
+    return "Hello $user->name";
+});
+```
+
+### Finding a model from a Sqid
+
+One of the most powerful features of Laravel Sqids is being able to resolve a model instance from a given Sqid. This
+could be incredibly powerful when searching models across your application.
+
+```php
+use ExploreOrg\Sqids\Model;
+
+$model = Model::find('usr_A3EyoEb2TO');
+```
+
+When we run the following, `$user` will be an instance of the `User` model for the given Sqid. If no model could be
+found, then `null` will be returned.
+
+if you would like to throw an exception instead, you can use the `findOrFail` method which will throw an instance of
+the `ModelNotFoundException`:
+
+```php
+use ExploreOrg\Sqids\Model;
+
+$model = Model::findOrFail('usr_A3EyoEb2TO');
+```
+
+> [!IMPORTANT]
+> In order to use this feature, you must use prefixes for your Sqids.
 
 ## Testing
 
-```bash
+```shell
 composer test
 ```
 
@@ -72,13 +219,14 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+If you discover a security vulnerability, please send an e-mail to Ben Sherred via ben@redexplosion.com. All security
+vulnerabilities will be promptly addressed.
 
 ## Credits
 
-- [Daniel Wilhelmsen](https://github.com/dpwilhelmsen)
+- [Ben Sherred](https://github.com/bensherred)
 - [All Contributors](../../contributors)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+Laravel Sqids is open-sourced software licensed under the [MIT license](LICENSE.md).
