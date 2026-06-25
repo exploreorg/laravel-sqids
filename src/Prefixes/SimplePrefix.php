@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ExploreOrg\Sqids\Prefixes;
 
+use ExploreOrg\Sqids\Contracts\Prefix;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use ExploreOrg\Sqids\Contracts\Prefix;
 
 class SimplePrefix implements Prefix
 {

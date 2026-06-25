@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ExploreOrg\Sqids;
 
-use Illuminate\Database\Eloquent\Model;
 use ExploreOrg\Sqids\Support\Config;
+use Illuminate\Database\Eloquent\Model;
 use Sqids\Sqids as SqidsCore;
 
 class Sqids
@@ -35,7 +35,7 @@ class Sqids
 
         /** @var string|null $modelPrefix */
         /** @phpstan-ignore-next-line */
-        $modelPrefix = (new $model())->getSqidPrefix();
+        $modelPrefix = (new $model)->getSqidPrefix();
 
         if ($modelPrefix) {
             return $modelPrefix;
@@ -88,7 +88,7 @@ class Sqids
     public static function alphabetForModel(string $model): string
     {
         $alphabet = Config::alphabet();
-        $shuffle = $model . Config::shuffleKey();
+        $shuffle = $model.Config::shuffleKey();
         $shuffleLength = mb_strlen($shuffle);
 
         if (! $shuffleLength) {

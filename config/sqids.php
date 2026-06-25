@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use ExploreOrg\Sqids\Prefixes\ConsonantPrefix;
 
 return [
 
@@ -78,6 +79,6 @@ return [
     |
     */
 
-    'prefix_class' => ExploreOrg\Sqids\Prefixes\ConsonantPrefix::class,
+    'prefix_class' => ConsonantPrefix::class,
 
 ];

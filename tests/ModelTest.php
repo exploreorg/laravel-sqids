@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ExploreOrg\Sqids\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Workbench\App\Models\Charge;
 use Workbench\App\Models\Customer;
 use Workbench\Database\Factories\ChargeFactory;

@@ -7,7 +7,7 @@ use Workbench\App\Models\Charge;
 use Workbench\App\Models\Customer;
 
 it('can generate a default prefix', function (): void {
-    expect(new SimplePrefix())
+    expect(new SimplePrefix)
         ->prefix(Customer::class)
         ->toBe('cus')
         ->prefix(Charge::class)

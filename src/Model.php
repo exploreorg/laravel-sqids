@@ -6,6 +6,8 @@ namespace ExploreOrg\Sqids;
 
 use Error;
 use Exception;
+use ExploreOrg\Sqids\Concerns\HasSqids;
+use ExploreOrg\Sqids\Support\Config;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -14,8 +16,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use ExploreOrg\Sqids\Concerns\HasSqids;
-use ExploreOrg\Sqids\Support\Config;
 use ReflectionClass;
 use SplFileInfo;
 
@@ -46,7 +46,7 @@ class Model
         $model = $models[$prefix] ?? null;
 
         if (! $model) {
-            throw new ModelNotFoundException();
+            throw new ModelNotFoundException;
         }
 
         /** @phpstan-ignore-next-line */

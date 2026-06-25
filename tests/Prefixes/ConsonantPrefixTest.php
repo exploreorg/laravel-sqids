@@ -7,7 +7,7 @@ use Workbench\App\Models\Charge;
 use Workbench\App\Models\Customer;
 
 it('can generate a prefix without vowels', function (): void {
-    expect(new ConsonantPrefix())
+    expect(new ConsonantPrefix)
         ->prefix(Customer::class)
         ->toBe('cst')
         ->prefix(Charge::class)

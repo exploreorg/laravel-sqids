@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ExploreOrg\Sqids\Concerns;
 
+use ExploreOrg\Sqids\Sqids;
+use ExploreOrg\Sqids\Support\Config;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
-use ExploreOrg\Sqids\Sqids;
-use ExploreOrg\Sqids\Support\Config;
 
 trait HasSqids
 {

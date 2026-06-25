@@ -93,15 +93,15 @@ class Config
         }
 
         try {
-            $prefix = new $prefix();
+            $prefix = new $prefix;
         } catch (Exception) {
-            return new SimplePrefix();
+            return new SimplePrefix;
         }
 
         if (! $prefix instanceof Prefix) {
-            return new SimplePrefix();
+            return new SimplePrefix;
         }
 
-        return new $prefix();
+        return new $prefix;
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ExploreOrg\Sqids\Rules;
 
 use Closure;
-
 use Illuminate\Contracts\Validation\InvokableRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as EloquentModel;

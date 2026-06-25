@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Validator;
 use ExploreOrg\Sqids\Rules\SqidExists;
 use ExploreOrg\Sqids\Sqids;
+use Illuminate\Support\Facades\Validator;
 use Workbench\App\Models\Customer;
 use Workbench\Database\Factories\CustomerFactory;
 use Workbench\Database\Factories\PostFactory;

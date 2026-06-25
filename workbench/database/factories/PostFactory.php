@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Workbench\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Workbench\App\Models\Post;
 
 /**
  * @phpstan-type TModel \Workbench\App\Models\Post
  *
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
+ * @extends Factory<TModel>
  */
 class PostFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
-     * @var class-string<\Illuminate\Database\Eloquent\Model|TModel>
+     * @var class-string<Model|TModel>
      */
     protected $model = Post::class;
 
